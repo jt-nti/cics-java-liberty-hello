@@ -12,6 +12,17 @@ description = 'CICS Liberty Hello Application - CICS Bundle'
 
 cicsBundle {
     build {
-        defaultJVMServer = project.findProperty("cics.jvmserver") ?: "DFHOSGI"
+        defaultJVMServer = System.getenv("CICSDEV_JVM_SERVER") ?: ""
+    }
+    deploy {
+        cicsplex = System.getenv("CICSDEV_PLEX") ?: ""
+        region   = System.getenv("CICSDEV_REGION") ?: ""
+        bunddef  = System.getenv("CICSDEV_BUNDLE") ?: ""
+        csdgroup = System.getenv("CICSDEV_CSD_GROUP") ?: ""
+        url      = System.getenv("CICSDEV_CMCI_URL") ?: ""
+        username = System.getenv("CICSDEV_USER") ?: ""
+        password = System.getenv("CICSDEV_PASSWORD") ?: ""
+        // Caution: uncomment the line below to disable TLS/SSL checking for certificates - TODO use property?
+        insecure = true
     }
 }

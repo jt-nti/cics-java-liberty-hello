@@ -1,0 +1,394 @@
+#######################################################################
+# JVM profile: DFHWLP                                                 #
+#                                                                     #
+#    Sample JVM profile for CICS TS Liberty JVM server (WLP)          #
+#                                                                     #
+# See topic "Options for JVMs in a CICS environment" in the Knowledge #
+# Center: http://www.ibm.com/support/knowledgecenter/SSGMCP_6.2.0     #
+#                                                                     #
+#######################################################################
+#                                                                     #
+# Licensed Materials - Property of IBM                                #
+#                                                                     #
+# 5655-YA1  CICS Transaction Server                                   #
+#                                                                     #
+# (c) Copyright IBM Corporation 2012, 2022 All Rights Reserved        #
+# US Government Users Restricted Rights - Use, duplication            #
+# or disclosure restricted by GSA ADP Schedule Contract               #
+# with IBM Corporation                                                #
+#                                                                     #
+#######################################################################
+#
+#                      Symbol Substitution
+#                      -------------------
+#
+# The following substitutions are supported:
+#   &APPLID;     => The applid of the CICS region.
+#   &BUNDLE;     => The name of the CICS bundle from which the JVM 
+#                   server is being installed.
+#   &BUNDLEID;   => The ID of the CICS bundle from which the JVM server
+#                   is being installed.
+#   &CONFIGROOT; => The location of configuration files, such as the 
+#                   JVM profile.
+#   &DATE;       => Date the JVMSERVER is enabled (localtime). Dyymmdd
+#   &JVMSERVER;  => The name of the JVMSERVER resource.
+#   &TIME;       => Time the JVMSERVER is enabled (localtime). Thhmmss
+#   &USSCONFIG;  => The value of the USSCONFIG SIT parameter that is 
+#                   the directory for CICS configuration files.
+#   &USSHOME;    => The value of the USSHOME SIT parameter.
+#
+# All variables must be delimited with & and ; for example
+#     ENV_VAR=myvar.&APPLID;.&JVMSERVER;.data
+#
+# Environment variables that you have previously defined in the profile
+# can also be used as substitution variables using &myvar;
+#
+# Note: The continuation character for use with JVM profiles is '\'.
+#**********************************************************************
+#
+#                      Required parameters
+#                      -------------------
+#
+# JAVA_HOME specifies the location of the Java directory.
+#JAVA_HOME=/java/java11_64
+JAVA_HOME=${CICSDEV_JVMPROFILE_JAVA_HOME}
+#
+# Set the current working directory to the home directory of the userid
+# of the running CICS job. If you do not specify this option, 
+# the current working directory defaults to /tmp.
+WORK_DIR=.
+#
+#**********************************************************************
+#
+#                      Optional parameters
+#                      -------------------
+#
+# Specify how long the OSGi framework initialization and termination 
+# is allowed to run before being timed out (the default value if omitted 
+# is 60 seconds). The specified value must be in the range 1-60000. 
+#OSGI_FRAMEWORK_TIMEOUT=60
+#
+# Specify any directories that contain DLLs required at run time.
+#LIBPATH_SUFFIX=
+#
+# If you use the PERFORM JVMSERVER GATHER JVM DIAGNOSTICS command
+# then diagnostics archive files appear in this directory.
+# (Defaults to <WORK_DIR>/diagnostics/archives)
+#DIAGS_ARCHIVE_DIR=
+#
+# If you use the PERFORM JVMSERVER GATHER JVM DIAGNOSTICS command
+# then diagnostics archive files are built using this temporary
+# directory. (Defaults to /tmp).
+#DIAGS_TEMP_DIR=
+#
+# If you use the PERFORM JVMSERVER GATHER JVM DIAGNOSTICS command
+# you can set the worst-case time it is allowed to run before it's 
+# considered to have hung or stalled.
+# (Defaults to 300 seconds = 5 minutes)
+#SCRIPT_TIMEOUT_SECS=
+#
+#**********************************************************************
+#
+#                WebSphere Liberty Profile (WLP)
+#                --------------------------------------
+#
+# To enable a Liberty (WLP) server. 
+WLP_INSTALL_DIR=&USSHOME;/wlp
+#
+# Run the Liberty JVM server in Integrated (default) or Standard-mode.
+#CICS_WLP_MODE=STANDARD|INTEGRATED
+#
+# Optionally define the directory to store shared and server-specific 
+# configuration. A server's configuration is at:
+# <WLP_USER_DIR>/servers/defaultServer.
+# If omitted from the JVM profile, CICS will default this value to 
+# <WORK_DIR>/&APPLID;/&JVMSERVER;/wlp/usr
+#WLP_USER_DIR=./&APPLID;/&JVMSERVER;/wlp/usr
+#
+# Optionally define the directory to contain output files for defined 
+# servers. By default, WLP stores a server's output logs and workarea in
+# the location: <WLP_USER_DIR>/servers/defaultServer 
+# If this variable is set, the output logs and workarea are stored in...
+# <WLP_OUTPUT_DIR>/defaultServer.
+# If omitted from the JVM profile, CICS will default this value to:  
+# ./&APPLID;/&JVMSERVER;/wlp/usr/servers 
+#WLP_OUTPUT_DIR=./&APPLID;/&JVMSERVER;/wlp/user/servers
+#
+# Instruct CICS to create and configure Liberty. CICS will:
+# - Create a Liberty server if one doesn't exist
+# - Add the required CICS Liberty feature to server.xml
+# - Add the CICS Security feature to server.xml if security is active
+# - Add the SSL feature if an HTTPS port has been specified
+# - Set the server host, HTTP and HTTPS values if supplied in the JVM 
+#   profile
+# When the property is set to false, CICS will expect a configured 
+# server.xml to be present in WLP_USER_DIR/servers/defaultServer. 
+# The default value if omitted is false. 
+-Dcom.ibm.cics.jvmserver.wlp.autoconfigure=true
+#
+# Instruct CICS to configure the host name used for HTTP requests. The 
+# default value if omitted is *. This value determines which host(s) WLP 
+# will accept requests from. Good practice would be to limit this to a 
+# specific host name. The server will only respect the value of this 
+# property when 'com.ibm.cics.jvmserver.wlp.autoconfigure=true'.
+#-Dcom.ibm.cics.jvmserver.wlp.server.host=*
+#
+# Instruct CICS to set the port used for HTTP requests. The default 
+# value if omitted is 9080. Set this to a free port number on your z/OS
+# system. WLP does not use CICS TCPIPServices. The server will only be 
+# updated with the value of this property when 
+# com.ibm.cics.jvmserver.wlp.autoconfigure=true.
+-Dcom.ibm.cics.jvmserver.wlp.server.http.port=${CICSDEV_JVMPROFILE_HTTP_PORT}
+#
+# Instruct CICS to set the port used for HTTPS requests. The default 
+# value if omitted is 9443. Set this to a free port number on your z/OS
+# system. The server will only be updated with the value of this property
+# when com.ibm.cics.jvmserver.wlp.autoconfigure=true.
+-Dcom.ibm.cics.jvmserver.wlp.server.https.port=${CICSDEV_JVMPROFILE_HTTPS_PORT}
+#
+# Instruct CICS to install a default application which can be used
+# to verify that the server has installed and started correctly.
+-Dcom.ibm.cics.jvmserver.wlp.defaultapp=true
+#
+# If your Web application serves static resources (e.g. .jpg, .gif, 
+# .ico, .bmp, .css, etc) - using this property will ensure requests   
+# for static resources do not attach a CICS task by default.
+#-Dcom.ibm.cics.jvmserver.wlp.optimize.static.resources=true
+#
+# Control which messages Liberty writes to the JVM server stdout stream.
+# The property is set OFF by CICS. If you want Liberty console messages 
+# written to the JVM server stdout file, the property can be set to 
+# INFO, AUDIT, WARNING, or ERROR.
+# NOTE: Liberty console messages are also written to the Liberty 
+#       messages.log independent of the setting of this property.
+#-Dcom.ibm.ws.logging.console.log.level=OFF
+#
+# To use DB2 in Liberty point this value at your installation of DB2.
+#-Dcom.ibm.cics.jvmserver.wlp.jdbc.driver.location=/usr/lpp/db2v11/jdbc
+#
+# Prevent Liberty from starting in the absence of an angel process
+#-Dcom.ibm.ws.zos.core.angelRequired=true
+#
+# Optionally start ONLY the specified list of authorized services. 
+# If you specify this property, you MUST also set 
+# 'com.ibm.ws.zos.core.angelRequired' property to true.
+# See https://www.ibm.com/docs/en/was-liberty/zos?topic=liberty-
+# enabling-zos-authorized-services-zos
+# for a description of the authorized services Liberty can use.
+#-Dcom.ibm.ws.zos.core.angelRequiredServices=SAFCRED,PRODMGR,ZOSAIO
+#
+#
+#               Liberty JVM server -  Service/Tracing
+#               -------------------------------------
+#
+# Uncomment this option if IBM Service request a WLP trace.
+# *DO NOT* use this option under 'normal' operation of your JVM server -
+# it will use incur extra CPU and I/O cost.
+#-Dcom.ibm.ws.logging.trace.specification=com.ibm.*=finer
+#
+#**********************************************************************
+#
+#                    Output/Logs - zFS or JOBLOG
+#                    ---------------------------
+#
+# If omitted, the output locations STDOUT, STDERR, JVMTRACE, and JVMLOG
+# default to unique zFS date/time stamped filenames suffixed with 
+# dfhjvmerr, dfhjvmout, dfhjvmtrc, or dfhjvmlog respectively.  
+# You may optionally customise the file names using the STDOUT, STDERR, 
+# JVMTRACE, and JVMLOG environment variables.
+# You may also send output directly to the CICS job log rather than zFS.
+# This can be achieved either by specifying a DD card or by using the 
+# value 'JOBLOG'.
+#STDOUT=JOBLOG
+#STDERR=JOBLOG
+#JVMTRACE=JOBLOG
+#JVMLOG=JOBLOG
+#
+#STDOUT=//DD:STDOUT
+#STDERR=//DD:STDERR
+#JVMTRACE=//DD:STDTRC
+#JVMLOG=//DD:STDLOG
+#
+# If you direct your output to the job log, be aware that output per 
+# JVMSERVER is no longer in a unique location. However, output can
+# be prefixed with the JVMSERVER name (identity) using the following:
+#IDENTITY_PREFIX=TRUE
+#
+# Additionally, you can send output to somewhere other than a file by
+# specifying a user output redirection class. See CICS Knowledge Center,
+# 'Writing Java classes to redirect JVM stdout and stderr output'.
+#USEROUTPUTCLASS=com.ibm.cics.samples.SJMergedStream
+#
+# The amount of information written to the JVMLOG destination can be 
+# controlled by the following option (the default if omitted is INFO):
+# LOG_LEVEL = INFO | WARNING | ERROR | NONE
+#
+# Logging and Trace (zFS only)
+# ----------------------------
+# Configure the number of STDOUT, STDERR, and JVMTRACE files to keep.
+# The default value if omitted is 0 (log files will not be deleted). 
+#LOG_FILES_MAX=5
+#
+# CICS TS v5.3 introduced an enhanced scheme for Log file locations.
+# You may revert to previous release behaviour by setting the following:
+#LOG_PATH_COMPATIBILITY=TRUE
+#
+#**********************************************************************
+#
+#                     IBM JVM options and diagnostics
+#                     -------------------------------
+#
+# See "IBM SDK for z/OS platforms, Java Technology Edition, SDK Guide"
+# or "IBM Developer Kit and Runtime Environment, Java Technology
+# Edition, Diagnostics Guide" for information on all JVM options.
+#
+# JVM options which print output and then exit must not be specified
+# because they will cause the creation of the JVM to fail. These
+# options include: -version, -help, -?, and -assert.
+#
+# JPDA (remote debug) and IBM Health Center monitoring
+# -------------------------------------------
+# To enable remote debug using the Java Platform Debugger Architecture
+#-agentlib:jdwp=transport=dt_socket\
+#,server=y\
+#,suspend=y\
+#,address=<hostname:port>
+#
+# Instruct Liberty to compile code such as JSPs as debug ready
+#-Dwas.debug.mode=true
+#
+# Inject trace into Liberty bytecode to allow debug hot swapping
+#-Dcom.ibm.websphere.ras.inject.at.transform=true
+#
+# Enable remote monitoring by the IBM Health Center
+#-Xhealthcenter:port=<port>
+#
+# DUMP control
+# ------------
+# List the dump agents currently in effect (to STDERR)
+#-Xdump:what
+#
+# Print the java stack of any thread which allocates an object 
+# greater than 5MB in size. (useful for identifying misbehaving code)
+#-Xdump:stack:events=allocation,filter=#5m
+#
+# Override the location/name pattern for JVM SYSTEM dumps.
+# Ensure write access for your CICS region ID, and sufficient DUMP space.
+# The default if not specified is: %uid.JVM.%job.D%y%m%d.T%H%M%S.X&DS  
+#JAVA_DUMP_TDUMP_PATTERN=DUMP.&APPLID;.&JVMSERVER;.D%y%m%d.T%H%M%S
+#
+# Customise the z/FS location for JAVA, HEAP, SNAP and JIT dumps.
+# A unique location per server is desirable, the default is:  
+# _CEE_DMPTARG=./&APPLID;/&JVMSERVER;
+#
+# Garbage Collection and Storage
+# ------------------------------
+# The following JVM options are optimised for generic Liberty workloads
+# -Xms    Initial Java heap size
+# -Xmx    Maximum Java heap size
+# -Xmso   Initial stack size for native threads (align with LE runopts)
+-Xms128M
+-Xmx256M
+-Xmso1M
+#
+# Set the maximum number of helper threads allowed for garbage 
+# collection. The default if omitted is (the number of CPUs - 1).
+#-Xgcthreads4
+#
+# Set the Garbage collection Policy.
+-Xgcpolicy:gencon
+#
+# Verbose logging may help diagnose garbage collector problems
+#-verbose:gc
+#
+# This option can be used for tracing classloading problems
+#-Dibm.cl.verbose=package/class
+#
+# Note: The CICS JVM server disables the JIT compiler resumable trap 
+# handler by default to avoid conflicts on certain hardware. However, 
+# this setting might be inadvertently reversed by specifying JIT 
+# options in the JVM profile. If you specify JIT options, you must 
+# include the keyword "noResumableTrapHandler".
+#
+# Using a shared class cache
+# --------------------------
+# JVM servers within the same z/OS LPAR can make use of a common Java
+# shared class cache. This reduces the overall virtual storage 
+# consumption, enables sharing of JITed code, and reduces JVM startup
+# time. The following options create a 256MB shared cache which can be
+# accessed by all CICS regions in the same RACF group.
+-Xscmx256M
+-Xshareclasses:name=cicsts.&APPLID;,groupAccess,nonfatal
+#
+# Optimising the JVM for faster JIT/AOT warm-up
+# ---------------------------------------------
+# Most users of a JVM will not drive the constant, intense
+# workload required to reach heavily JIT'd code before the JVM is
+# recycled. The following setting provides quicker warm up, and shared
+# optimisation benefits (if using -Xshareclasses).   
+-Xtune:virtualized
+#
+# From Java 1.7.1 -Xcompressedrefs is default for performance reasons.
+# This trade off increases the use of 31-bit storage. If your
+# environment is 31-bit storage constrained, the following option may
+# be preferred. 
+#-Xnocompressedrefs
+#
+#**********************************************************************
+#
+#                     JVM system properties
+#                     ---------------------
+#
+# Properties are key name and value pairs prefixed with -D. For example:
+# -Dcom.ibm.cics.some.property=some_value
+#
+# The following option disables the Java Attach API. For further
+# information about enabling the Java Attach API, see
+# http://www-01.ibm.com/support/docview.wss?uid=swg21407964.
+-Dcom.ibm.tools.attach.enable=no
+#
+# WebSphere Application Server Liberty is only supported when running
+# under a JVM with the UTF-8 or ISO-8859-1 character encodings.
+-Dfile.encoding=ISO-8859-1
+#
+# Set the console.encoding of the JVM to influence the encoding in which 
+# console files such as dfhjvmout, dfhjvmerr and dfhjvmtrc are written.
+#-Dconsole.encoding=ISO-8859-1
+#
+# If you require the OSGi Framework to observe strict specification 
+# compliance - insisting that all packages used by an application 
+# should be explicitly imported (including javax.*) - then uncomment
+# the following property:
+# -Dosgi.compatibility.bootdelegation=false
+#**********************************************************************
+#
+#              Unix System Services Environment Variables
+#              ------------------------------------------
+#
+# Disable the z/OS shared libraries to reduce 31-bit storage usage
+# See topic "Tuning the z/OS shared library region" in the Knowledge 
+# Center: http://www.ibm.com/support/knowledgecenter/SSGMCP_6.2.0
+_BPXK_DISABLE_SHLIB=YES
+#
+# Specify the local time zone (POSIX format) in which the JVM will run.
+#TZ=CET-1CEST,M3.5.0,M10.5.0
+#
+#
+#**********************************************************************
+#
+#                  JCICS API System properties
+#                  ---------------------------
+#
+# Controls whether the com.ibm.cics.server.Channel.getContainer(name) 
+# API call checks for the existence of underlying CICS containers
+# or not. Valid values are 'true' or 'false'. Default is 'true'.
+# Introduced in CICS v6.1
+# -Dcom.ibm.cics.server.container.existence.checking.default=true
+#
+
+#**********************************************************************
+#
+#                      Sammple parameters
+#                      ------------------
+#
+LIBERTY_INCLUDE_XML=${CICSDEV_JVMPROFILE_WLP_XML}

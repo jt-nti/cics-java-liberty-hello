@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Use the following JVM server option to include the Liberty -->
+<!-- server configuration required for this sample:             -->
+<!-- LIBERTY_INCLUDE_XML=<path_to>/libertyInclude.xml           -->
+<server description="Required sample configuration">
+    <featureManager>
+        <feature>pages-3.1</feature>
+    </featureManager>
+
+    <applicationMonitor dropins="dropins" dropinsEnabled="true" pollingRate="5s" updateTrigger="disabled"/>
+</server>

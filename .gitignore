@@ -50,6 +50,8 @@ buildNumber.properties
 hs_err_pid*
 replay_pid*
 
+# Built Visual Studio Code Extensions
+*.vsix
 
 # VSCode ignores
 .vscode/*
@@ -61,12 +63,6 @@ replay_pid*
 
 # Local History for Visual Studio Code
 .history/
-
-# Built Visual Studio Code Extensions
-*.vsix
-*.vscode
-
-
 
 # Gradle ignores
 .gradle
@@ -86,3 +82,6 @@ gradle-app.setting
 .gradletasknamecache
 
 bin
+
+resources/
+.env

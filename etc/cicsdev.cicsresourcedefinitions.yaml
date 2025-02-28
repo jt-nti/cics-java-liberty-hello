@@ -1,0 +1,6 @@
+resourceDefinitions:
+  - cicsdev-server:
+      name: CICSDEV
+  - sample-bundle:
+      name: HELLOWLP
+        

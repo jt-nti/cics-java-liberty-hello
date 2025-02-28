@@ -1,0 +1,29 @@
+schemaVersion: resourceModel/1.0
+application:
+  name: CICSdev Sample Application
+
+resourceModel:
+  target: cicsts-6.1.0
+  defines:
+    - id: cicsdev-server
+      type: jvmserver
+      attributes:
+        public:
+          name:
+            required: true
+        private:
+          description: CICSdev sample JVM server 
+          group: CICSDEV
+          status: ENABLED
+    - id: sample-bundle
+      type: bundle
+      attributes:
+        public:
+          name:
+            required: true
+        private:
+          description: Sample CICS Liberty Web Application
+          bundledir: /u/cicsuser/cicsdev/bundles/cics-java-liberty-hello-bundle_1.0.0
+          group: CICSDEV
+          status: ENABLED
+        

@@ -5,6 +5,49 @@ A simple enterprise Java web application that can run in a CICS Liberty JVM serv
 
 This sample demonstrates a simple Java web application using JavaServer Pages to echo information about the CICS task the page is running on.
 
+## Using a dev container (work in progress!)
+
+This is an experiment with getting a CICSDev sample working in a [VS Code dev container](https://code.visualstudio.com/docs/devcontainers/containers). There are definitely more than a few rough edges so feedback is very welcome!
+
+Before starting you need to create a `.env` file and fill in the settings for your mainframe environment.
+In the real world, you'll probably need a friendly sys prog to set things up for you and let you know what all the settings should be.
+See the [sample.env](sample.env) file for the settings you need.
+
+If you're using VS Code in the dev container, there are a few tasks defined which should get you all the way to a working deployment.
+
+1. update-zowe-profile
+
+   Run this task after creating or updating you `.env` file to update the Zowe connection settings.
+
+2. create-jvmserver
+
+   On a development system, you might be able to create your own JVM server. If so, run this task!
+
+3. define-bundle
+
+   On a development system, you might be able to create your own bundle definition. If so, run this task!
+
+4. deploy-bundle
+
+   This runs the gradle deployCICSBundle task. You will need all of the following for it to run successfully!
+
+   ✅ A CMCI server with the [CICS bundle deployment API configured](https://www.ibm.com/docs/en/cics-ts/6.x?topic=suc-configuring-cmci-jvm-server-cics-bundle-deployment-api)
+
+   ✅ A Liberty JVM server with the correct features enabled
+
+   ✅ A bundle defined with a directory matching the bundle you're deploying, i.e.
+
+   `<bundle_deploy_root>/<bundle_id>_<bundle_version>`
+
+   where,
+   
+   - `<bundle_deploy_root>` **must** match the `-Dcom.ibm.cics.jvmserver.cmci.bundles.dir=<bundles_directory>` setting in the JVM profile of the CMCI JVM server,
+   - `<bundle_id>` matches the ID of the bundle you're deploying, e.g. `cics-java-liberty-hello-bundle`, and
+   - `<bundle_version>` matches the version of the bundle you're deploying, e.g. `1.0.0`
+
+All these tasks can also be run outside VS Code using the [just](https://github.com/casey/just) command runner. There is also a `just install` recipe to install the required tools.
+
+
 ## Requirements
 * CICS TS for z/OS V5.5 or later
 * Java SE 1.8 or later on the local workstation

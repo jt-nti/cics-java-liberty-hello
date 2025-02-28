@@ -1,0 +1,76 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/ubuntu
+{
+	"name": "CICSdev",
+
+	// More info: https://containers.dev/guide/dockerfile
+	"build": {
+		// Path is relative to the devcontainer.json file.
+		"dockerfile": "Dockerfile"
+	},
+
+	// More info: https://code.visualstudio.com/remote/advancedcontainers/start-processes
+	"overrideCommand": false,
+
+	// IPC_LOCK is required to run gnome-keyring-daemon.
+	// More info: https://stackoverflow.com/questions/75672304/why-does-gnome-keyring-daemon-fail-with-operation-not-permitted-in-a-dev-conta
+	"capAdd": [
+		"IPC_LOCK"
+	],
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/java:1": {
+			"installGradle": true,
+			"installMaven": false,
+			"version": "17.0.14",
+			"jdkDistro": "tem"
+		},
+		"ghcr.io/devcontainers/features/node:1": {
+			"nodeGypDependencies": true,
+			"installYarnUsingApt": true,
+			"version": "lts",
+			"pnpmVersion": "latest",
+			"nvmVersion": "latest"
+		},
+		"ghcr.io/devcontainers/features/python:1": {
+			"installTools": true,
+			"version": "latest"
+		}
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "just install",
+
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"terminal.integrated.commandsToSkipShell": [
+					"-workbench.action.showCommands", // F1
+					"-workbench.action.terminal.findNext", // F3
+					"-search.action.focusNextSearchResult", // F4
+					"-workbench.action.debug.start" // F5
+				]
+				// "terminal.integrated.sendKeybindingsToShell": true // overrides commandsToSkipShell above
+			},
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"Zowe.vscode-extension-for-zowe@3.2.0",
+				"Zowe.cics-extension-for-zowe@3.8.0",
+				"IBM.zopeneditor",
+				"vscjava.vscode-java-pack",
+				"vscjava.vscode-gradle",
+				"redhat.vscode-yaml"
+			]
+		}
+	}
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

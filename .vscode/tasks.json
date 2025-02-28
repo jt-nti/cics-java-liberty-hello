@@ -1,0 +1,83 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "cicsdev: build",
+            "type": "shell",
+            "command": "just",
+            "args": [
+                "build"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "cicsdev: build-resources",
+            "type": "shell",
+            "command": "just",
+            "args": [
+                "build-resources"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "cicsdev: update-zowe-profile",
+            "type": "shell",
+            "command": "just",
+            "args": [
+                "update-zowe-profile"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "cicsdev: create-jvmserver",
+            "type": "shell",
+            "command": "just",
+            "args": [
+                "create-jvmserver"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "cicsdev: define-bundle",
+            "type": "shell",
+            "command": "just",
+            "args": [
+                "define-bundle"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "cicsdev: deploy-bundle",
+            "type": "shell",
+            "command": "just",
+            "args": [
+                "deploy-bundle"
+            ],
+            "options": {
+                "env": {
+                    "CICSDEV_PASSWORD": "${input:password}"
+                }
+            },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "password",
+            "description": "Password:",
+            "default": "",
+            "type": "promptString",
+            "password": true
+        },
+    ]
+}
